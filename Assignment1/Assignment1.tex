@@ -62,9 +62,9 @@
 \horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
 }
 
-\author{Yuchen, GUO} % Your name
+\author{Yuchen, GUO   No.20477118} % Your name
 
-\date{\normalsize\today} % Today's date or a custom date
+\date{\normalsize September 20, 2017} % Today's date or a custom date
 
 \begin{document}
 
@@ -87,7 +87,7 @@ S =
 \end{bmatrix}
 \end{align*}
 
-So the ball has only 9 exclusive states as following:
+So the robot has only 9 exclusive states as following:
 
 \begin{align*}
 S_1 = 
@@ -146,7 +146,16 @@ S_9 =
 \end{bmatrix},
 \end{align*}
 
-Below are the original form of $S_1$ to $S_9$:
+The state of every cell is shown in Figure ~\ref{fig:Problem1.1.1}.\\
+\\
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.5]{image7.png}
+    \caption{State of every cell in the grid.}
+    \label{fig:Problem1.1.1}
+\end{figure}\\
+
+Below are the boolean forms of $S_1$ to $S_9$:
 
 \begin{align*}
 S_1 = s_1 \cdot s_2 \cdot s_3 \cdot \overline{s_4} \cdot \overline{s_5} \cdot \overline{s_6} \cdot s_7 \cdot s_8\\
@@ -166,7 +175,7 @@ S_9 = \overline{s_1} \cdot \overline{s_2} \cdot s_3 \cdot s_4 \cdot s_5 \cdot s_
 
 Let's take the northwest corner for example.\\
 
-When the ball is not next to the north border, move it to north, otherwise move it to west\\
+When the robot is not next to the north border, move it to north, otherwise move it to west\\
 
 Here is the production system:\\
 
@@ -184,16 +193,24 @@ or
 
 \subsection{}
 
-We can put the robot in the center of the grid, and prove it can't visit every cell.
+We can prove it by putting the robot in the center of the grid, 
+and then prove it can't visit every cell. Here are my two methods:\\
 
-With $S_5$, it can move in any direction in ${north, west, east, south}$, in the following figure, 
+\subsubsection{Method One}
+
+With $S_5$, it can move in any direction in ${north, west, east, south}$, 
+in Figure ~\ref{fig:Problem1.2.1}, 
 we assume it be west, and it can be any direction by rotating the image, 
 the situations are equivalent.
 
-The robot with move in the same direction until it reaches a border.
-Then let's see how can its state transfer to $S_5$ again,
-all possible ways are marked with pointers in the left part of Figure ~\ref{fig:Problem1.2.1}, 
-the right part shows possible circles that the robot can move in(equivalent paths are ignored).\\
+The robot will move in the same direction until it reaches a border.
+To visit all cells in the grid, it must visit other cells with $S_5=1$.
+So let's see how can its state transfer to $S_5$ again,
+all possible ways are marked with pointers in the left part of Figure ~\ref{fig:Problem1.2.1}.
+So in every path it enters a $S_5$ cell, it will go straight to the west border and 
+can't visit other $S_5$ cells, so it's proved that no production system 
+can make the robot visit all cells in the grid.
+The right part shows possible circles that the robot can move in(equivalent paths are ignored).\\
     
 \begin{figure}[p]
     \includegraphics[scale=0.5]{image1.png}
@@ -210,16 +227,62 @@ the right part shows possible circles that the robot can move in(equivalent path
     \label{fig:Problem1.2.2}
 \end{figure}
 
+\subsubsection{Method Two}
+
 Figure ~\ref{fig:Problem1.2.2} shows all production systems makes the robot move between 
-some cells(Not all cells in the grid).
-So in no way can the robot visit cells far from the border. 
-Thus it's not possible to visit every cell in the grid.\\
+some cells(Not all cells in the grid).\\
+
+The search tree expands in the following process:\\
+
+We start with a $S_5$ cell, four actions are in fact equivalent as we rotate the grid, 
+assume the production system gives $S_5 \rightarrow W$, it reaches the west border,
+the next decision is $S_4 \rightarrow ?$. \\
+
+If $S_4 \rightarrow E$, the robot will move between two nodes. \\
+So we just need to expand $S_4 \rightarrow N$ and $S_4 \rightarrow S$,
+and the two branches are equivalent too. Let's assume $S_4 \rightarrow N$.\\
+
+Then the robot reaches the northwest corner: $S_1$, \\
+If $S_1 \rightarrow S$, the robot will move between two nodes. \\
+So $S_1 \rightarrow E$.\\
+
+Then the state of the robot becomes $S_2$, \\
+If $S_2 \rightarrow W$, the robot will move between two nodes. \\
+If $S_2 \rightarrow S$, the robot will move in a circle of four nodes. \\
+So $S_2 \rightarrow E$.\\
+
+Then the state of the robot becomes $S_3$, \\
+If $S_3 \rightarrow W$, the robot will move between two nodes. \\
+So $S_3 \rightarrow S$.\\
+
+Then the state of the robot becomes $S_6$, \\
+If $S_6 \rightarrow N$, the robot will move between two nodes. \\
+So $S_6 \rightarrow W$, the robot will move in a circle of twenty nodes. \\
+So $S_6 \rightarrow S$.\\
+
+Then the state of the robot becomes $S_9$, \\
+If $S_9 \rightarrow N$, the robot will move between two nodes. \\
+So $S_9 \rightarrow W$.\\
+
+Then the state of the robot becomes $S_8$, \\
+If $S_8 \rightarrow E$, the robot will move between two nodes. \\
+So $S_8 \rightarrow N$, the robot will move in a circle of thirty-six nodes. \\
+So $S_8 \rightarrow W$.\\
+
+Then the state of the robot becomes $S_7$, \\
+If $S_7 \rightarrow E$, the robot will move between two nodes. \\
+So $S_7 \rightarrow N$.\\
+
+So, the state of the robot becomes $S_4$ again, it will move clockwise next to the border, 
+move in a circle of thirty-six nodes.\\
+
+Thus it's proved that no production system can make the robot visit all cells in the grid. \\
 
 %------------------------------------------------
 \subsection{Part 3 of Problem 1}
 
 Let $W_{ij}$ be the features defined as:\\
-$W_{ij}$ = 1 iff at the previous time step, $S_i$ = 1, and the robot moved $j$($j$ is in ${N, W, E, S}$).
+$W_{ij}$ = 1 iff at the previous time step, $S_i$ = 1, and the robot moved $j$($j \in \{N, W, E, S\}$).
 For example:
 $W_{1E}$ = 1 iff at the previous time step, $S_1$ = 1, and the robot moved $East$.\\
 
@@ -302,13 +365,73 @@ Result&= C \cdot D \cdot A \cdot B +
 
 \section{Problem 3}
 
-Here is the breadth-first search process:
+As Figure ~\ref{fig:Problem3.1} shows, we can use Breadth First Search to find the minimal set of training instances. 
+The depth of the search tree is the size of the training set, so we can always get the minimal set.
 
 \begin{figure}[h]
     \includegraphics[scale=0.5]{image5.png}
     \caption{Breadth-first search to do error-correction}
     \label{fig:Problem3.1}
 \end{figure}
+
+\begin{figure}[t]
+    \includegraphics[scale=0.4]{image8.png}
+    \hspace{\fill}
+    \includegraphics[scale=0.4]{image9.png}
+    \caption{TLU without augmented vectors and TLU with augmented vectors}
+    \label{fig:Problem3.2}
+\end{figure}
+
+\subsection{Without augmented vectors}
+
+As the left part of Figure ~\ref{fig:Problem3.2} show, we have a preassigned $\theta=0.5$.\\
+
+We have learning rate $c=1$, 
+and $w$ is inited as $w_0=\begin{bmatrix}0 & 0 & ... & 0 & 0\end{bmatrix}$.\\
+
+% so for whatever train data $x_1$ in the first iteration, 
+% we have $f=w_0x_1=0$
+If $x_1=\begin{bmatrix}0 & 0 & \cdots & 0 & 0\end{bmatrix}$, then $d_1=0$,
+$f_1=w_0x_1^T=0 \leqslant 0.5$,
+$w_1=w_0+1*(0-0)*x_1 = w_0$, $w$ didn't change, the model is not improved.\\
+
+If $x_1=\begin{bmatrix}x_{1, 1} & x_{1, 2} & \cdots & x_{1, n-1} & x_{1, n}\end{bmatrix}$ 
+    ($\exists i \in [1, n], x_{1, i} \neq 0$), then $d_1=1$, 
+$f_1=w_0x_1^T=0 \leqslant 0.5$, $w_1=w_0+1*(1-0)*x_1 = x_1$.\\
+
+We can find that, if $x_1=\begin{bmatrix}1 & 1 & \cdots & 1 & 1\end{bmatrix}=w_1$, 
+all inputs can get the correct result.\\
+
+So the minimal set of training instances is $\{\begin{bmatrix}1 & 1 & \cdots & 1 & 1\end{bmatrix}\}$
+
+\subsection{With augmented vectors}
+
+As the right part of Figure ~\ref{fig:Problem3.2} show, we have a constant input $\forall i, x_{i,n+1}=1$.\\
+
+We have learning rate $c=1$, and a default threshold $\theta=0$, 
+and $w \in R^{n+1}$ is inited as $w_0=\begin{bmatrix}0 & 0 & ... & 0 & 0\end{bmatrix}$.\\
+
+% so for whatever train data $x_1$ in the first iteration, 
+% we have $f=w_0x_1=0$
+If $x_1=\begin{bmatrix}0 & 0 & \cdots & 0 & 1\end{bmatrix}$, then $d_1=0$,
+$f_1=w_0x_1^T=0 \leqslant 0$,
+$w_1=w_0+1*(0-0)*x_1 = w_0$, $w$ didn't change, the model is not improved.\\
+
+If $x_1=\begin{bmatrix}x_{1, 1} & x_{1, 2} & \cdots & x_{1, n} & x_{1, n+1}\end{bmatrix}$ 
+    ($\exists i \in [1, n], x_{1, i} \neq 0$), then $d_1=1$, 
+$f_1=w_0x_1^T=0 \leqslant 0$, $w_1=w_0+1*(1-0)*x_1 = x_1$.\\
+
+We can find that, if $x_1=\begin{bmatrix}1 & 1 & \cdots & 1 & 1\end{bmatrix}=w_1$, 
+all inputs except $\begin{bmatrix}0 & 0 & \cdots & 0 & 0 & 1\end{bmatrix}$ can get the correct result.\\
+
+So let $x_2=\begin{bmatrix}0 & 0 & \cdots & 0 & 0 & 1\end{bmatrix}$, then $d_2=0$,
+$f_2=w_1x_2^T=1>0$,
+$w_2=w_1+1*(0-1)*x_1=\begin{bmatrix}1 & 1 & \cdots & 1 & 1 & 0\end{bmatrix}$.\\
+
+Here $w_2$ perfectly output the "or" result for any input.\\
+
+So the minimal set of training instances is $\{\begin{bmatrix}1 & 1 & \cdots & 1 & 1\end{bmatrix},
+\begin{bmatrix}0 & 0 & \cdots & 0 & 0\end{bmatrix}\}$
 
 %----------------------------------------------------------------------------------------
 
@@ -320,11 +443,19 @@ Here is the breadth-first search process:
 
 \subsection{}
 
-Total floors the elevator moved when it transfered the last people.
+The input of the fitness function is an algorithm that moves the elevator to take people to the correct floor.
+
+The output of the fitness function is total floors the elevator moved in the process of moving everyone to their target floor.
+
+Algorithms with less total floor should be selected as the next generation.
 
 \subsection{}
 
-Total time all vehicles and passerbys waited at the crossroad.
+The input of the fitness function is the algorithm that changes the traffic lights at the intersection.
+
+The output of the fitness function is total time all vehicles and passerbys waited at the crossroad.
+
+Algorithms with less total time should be selected as the next generation.
 
 %----------------------------------------------------------------------------------------
 
@@ -335,19 +466,19 @@ Total time all vehicles and passerbys waited at the crossroad.
 \section{Problem 5}
 
 Feature:\\
-$F_1$: cricket is on the threshold\\
-$F_2$: all is well in the burrow\\
+$F_1$: cricket is on the threshold, $\overline{F_1}$ means the cricket is away from the threshold\\
+$OK$: ok bit used to remember whether it's ok inside
 
 Action:\\
-$A_1$: move the cricket to the threshold\\
-$A_2$: check inside\\
-$A_2$: go outside to the threshold\\
+$A_1$: go to the cricket and move it to the threshold\\
+$A_2$: go inside and check, then return to the threshold\\
 $A_3$: drag the cricket inside\\
 
 Production System:\\
 \begin{align*}
-\overline{F_1} \longrightarrow A_1\\
-F_1 \longrightarrow A_2\\
+\overline{F_1} &\longrightarrow A_1, OK=0\\
+F_1 \cdot \overline{OK} &\longrightarrow A_2, OK=1\\
+F_1 \cdot OK &\longrightarrow A_3\\
 \end{align*}
 
 
